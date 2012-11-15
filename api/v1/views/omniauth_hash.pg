@@ -1,0 +1,6 @@
+node :provider => 'vanilla'
+node :uid => user.id
+node :info do
+  node :name => user.name
+  node :email => user.email_address
+end

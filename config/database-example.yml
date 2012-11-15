@@ -1,0 +1,16 @@
+---
+development:
+  database: vanilla_development
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  username: vanilla
+  password: vanilla
+
+test:
+  database: vanilla_test
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  username: vanilla
+  password: vanilla

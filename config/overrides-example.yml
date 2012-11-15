@@ -1,0 +1,9 @@
+# These override any attributes specified in the store.
+development:
+  apdm:
+    default_url: http://mysite.dev/
+    template_url: http://mysite.dev/integration/vanilla/template
+staging:
+  apdm:
+    default_url: http://mysite.staging.example.com/
+    template_url: http://mysite.staging.example.com/integration/vanilla/template

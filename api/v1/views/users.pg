@@ -1,0 +1,6 @@
+collection :users => users do |user|
+  attributes :id, :name,
+    :email_address, :email_verified,
+    :mobile_number, :mobile_verified
+  node :store => user.store.name
+end

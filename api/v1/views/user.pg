@@ -1,0 +1,7 @@
+node :user => user do
+  node :store => user.store.name
+  attributes :id, :name,
+    :email_address, :email_verified,
+    :mobile_number, :mobile_verified,
+    :activated, :activated_at
+end

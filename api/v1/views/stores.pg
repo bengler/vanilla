@@ -1,0 +1,3 @@
+collection :stores => stores do |store|
+  partial :store, :store => store
+end
