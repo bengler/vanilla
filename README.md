@@ -17,6 +17,14 @@ Vanilla uses ActiveRecord for database bindings.
 
 Templating is currently provided entirely by client application.
 
+Running
+-------
+
+* Use `config/database-example.yml` as a starting point to create `config/database.yml`.
+* Create database: `bundle exec rake db:create db:migrate`.
+* To run with Pow, symlink folder into `~/.pow`.
+* To run with Unicorn, start with `bundle exec unicorn config.ru`.
+
 Templating
 ----------
 
