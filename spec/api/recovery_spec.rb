@@ -17,12 +17,7 @@ describe 'Recovery' do
       :template_url => 'http://example.com/template',
       :default_url => 'http://example.com/',
       :default_sender_email_address => 'Example <notifications@example.com>',
-      :service_settings => {
-        :mailgun => {
-          :domain => 'example.com',
-          :api_key => 'key-s3cr3t'
-        }
-      },
+      :hermes_session => 'god',
       :scopes => {
         'basic' => 'Just basic stuff',
         'extended' => 'Bags of stuff'
@@ -166,9 +161,9 @@ describe 'Recovery' do
               true
             })
 
-          hermes_stub = stub_request(:post, %r{/api/hermes/v1/mystore/messages}).
+          hermes_stub = stub_request(:post, %r{/api/hermes/v1/mystore/messages/sms}).
             with(:body => hash_including(:recipient_number => user.mobile_number)).
-            to_return(:body => "666")
+            to_return(:body =>  '{"post": {"uid": "post.hermes_message:mystore$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["in_progress"] }')
 
           post "/mystore/recover", {:identification => user.mobile_number}
           last_response.should be_redirect
@@ -213,13 +208,11 @@ describe 'Recovery' do
                 :subject => 'A code, my kingdom for a code',
                 :text => "Code, blah blah"))
 
-          stub2 = stub_request(:post, "https://api:key-s3cr3t@api.mailgun.net/v2/example.com/messages").
-            with(:body => hash_including(
-              "from" => store.default_sender_email_address,
-              "subject" => "A code, my kingdom for a code",
-              "text" => "Code, blah blah",
-              "to" => "ola@nordmann.com")).
-            to_return(:status => 200)
+          stub2 = stub_request(:post, "http://localhost/api/hermes/v1/mystore/messages/email").
+            with(:body => "{\"sender_email\":\"#{store.default_sender_email_address}\",\"recipient_email\":\"ola@nordmann.com\",\"subject\":\"A code, my kingdom for a code\",\"text\":\"Code, blah blah\",\"path\":\"vanilla\",\"session\":\"god\"}",
+                 :headers => {'Accept'=>'application/json', 'Content-Type'=>'application/json'}).
+            to_return(:status => 200, :body =>  '{"post": {"uid": "post.hermes_message:test$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["in_progress"] }', :headers => {})
+
 
           stub3 = stub_request_for_template(:verification_code_sent,
             :body => proc { |h|
