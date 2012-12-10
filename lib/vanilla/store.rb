@@ -22,7 +22,6 @@ module Vanilla
     DEFAULT_USER_NAME_PATTERN = /\A[[:alpha:]0-9_., '`´-]+\z/.freeze
 
     serialize :scopes
-    serialize :service_settings
     serialize :login_methods
 
     has_many :clients
@@ -95,24 +94,22 @@ module Vanilla
     end
 
     def send_sms!(options)
-      message_id = Pebblebed::Connector.new.hermes.post(
-        "/#{self.name}/messages", options.slice(:recipient_number, :body))
-      message_id
+      message = Pebblebed::Connector.new(self.hermes_session).hermes.post(
+        "/#{self.name}/messages/sms", options.slice(:recipient_number, :text).merge(:path => "vanilla"))
+      message["post"]["uid"]
     end
 
     def send_email!(options)
       logger.debug { "Sending email: #{options.inspect}" }
       message = {}
-      message[:from] = self.default_sender_email_address
-      message[:to] = options[:recipient_address]
+      message[:sender_email] = self.default_sender_email_address
+      message[:recipient_email] = options[:recipient_address]
       message[:subject] = options[:subject]
       message[:html] = options[:html] if options[:html]
       message[:text] = options[:text] if options[:text]
-      if (default_message = self.mailgun_settings[:default_message])
-        message.merge!(default_message)
-      end
-      mailgun['messages'].post message
-      nil
+      message = Pebblebed::Connector.new(self.hermes_session).hermes.post(
+        "/#{self.name}/messages/email", message.merge(:path => "vanilla"))
+      message["post"]["uid"]
     end
 
     def scopes
@@ -216,22 +213,6 @@ module Vanilla
       raise TemplateRenderingError, "Server could not render template: #{e}"
     end
 
-    def service_settings
-      (super || {}).with_indifferent_access
-    end
-
-    def service_settings=(value)
-      super(value || {})
-    end
-
-    def mailgun_settings
-      (service_settings[:mailgun] || {}).with_indifferent_access
-    end
-
-    def mailgun_settings=(value)
-      service_settings[:mailgun] = value
-    end
-
     def sign_with_secret(data)
       OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA1.new, self.secret, data.to_s)
     end
@@ -241,13 +222,6 @@ module Vanilla
       def ensure_secret
         self.secret ||= SecureRandom.random_number(2 ** 256).to_s(36)
         true
-      end
-
-      def mailgun
-        mailgun_settings = self.mailgun_settings
-        RestClient::Resource.new("https://api.mailgun.net/v2/#{mailgun_settings[:domain]}",
-          :user => 'api',
-          :password => mailgun_settings[:api_key])
       end
 
       def update_attributes_from_overrides
