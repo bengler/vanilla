@@ -10,5 +10,4 @@ node :store => store do
     :maximum_user_name_length,
     :minimum_user_name_length,
     :default_sender_email_address
-  node :service_settings => store.service_settings
 end
