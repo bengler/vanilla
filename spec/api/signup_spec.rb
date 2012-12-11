@@ -17,12 +17,7 @@ describe 'Signup' do
       :template_url => 'http://example.com/template',
       :default_url => 'http://example.com/',
       :default_sender_email_address => 'Example <notifications@example.com>',
-      :service_settings => {
-        :mailgun => {
-          :domain => 'example.com',
-          :api_key => 'key-s3cr3t'
-        }
-      },
+      :hermes_session => 'god',
       :scopes => {
         'basic' => 'Just basic stuff',
         'extended' => 'Bags of stuff'
@@ -160,9 +155,9 @@ describe 'Signup' do
             true
           })
 
-        stub2 = stub_request(:post, %r{/api/hermes/v1/mystore/messages}).
-          with(:body => hash_including(:recipient_number => '12345678')).
-          to_return(:body => "666")
+        stub2 = stub_request(:post, %r{/api/hermes/v1/mystore/messages/sms}).
+          with(:body => hash_including(:recipient_number => "12345678")).
+          to_return(:body =>  '{"post": {"uid": "post.hermes_message:mystore$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["in_progress"] }')
 
         post_body '/mystore/signup', {}, {
           :name => 'Burt Engelskmann',
@@ -433,14 +428,10 @@ describe 'Signup' do
             "to" => "burt@engelskmann.com"
           }))
 
-        mailgun_stub = stub_request(:post, "https://api:key-s3cr3t@api.mailgun.net/v2/example.com/messages").
-          with(:body => hash_including(
-            "from" => store.default_sender_email_address,
-            "subject" => "A code, my kingdom for a code",
-            "text" => "Code is 1234",
-            "html" => "<p>Code is 1234</p>",
-            "to" => "burt@engelskmann.com")).
-          to_return(:status => 200)
+        hermes_stub = stub_request(:post, "http://localhost/api/hermes/v1/mystore/messages/email").
+          with(:body => "{\"sender_email\":\"Example <notifications@example.com>\",\"recipient_email\":\"burt@engelskmann.com\",\"subject\":\"A code, my kingdom for a code\",\"html\":\"<p>Code is 1234</p>\",\"text\":\"Code is 1234\",\"path\":\"vanilla\",\"session\":\"god\"}",
+               :headers => {'Accept'=>'application/json', 'Content-Type'=>'application/json'}).
+          to_return(:status => 200, :body => '{"post": {"uid": "post.hermes_message:test$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["in_progress"] }', :headers => {})
 
         get "/mystore/signup/complete"
         last_response.should be_redirect
@@ -449,7 +440,7 @@ describe 'Signup' do
         unverified_user.reload
         unverified_user.email_verified?.should == false
 
-        mailgun_stub.should have_been_requested
+        hermes_stub.should have_been_requested
         email_template_stub.should have_been_requested
       end
     end

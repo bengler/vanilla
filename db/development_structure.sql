@@ -4,10 +4,23 @@
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = off;
+SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET escape_string_warning = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
 
 SET search_path = public, pg_catalog;
 
@@ -106,9 +119,9 @@ CREATE TABLE nonces (
     store_id integer NOT NULL,
     key text NOT NULL,
     value text NOT NULL,
+    url text,
     expires_at timestamp without time zone NOT NULL,
     user_id integer NOT NULL,
-    url text,
     endpoint text,
     context text,
     delivery_status_key text
@@ -166,8 +179,8 @@ CREATE TABLE stores (
     minimum_user_name_length integer,
     maximum_user_name_length integer,
     default_sender_email_address text,
-    service_settings text,
-    login_methods text
+    login_methods text,
+    hermes_session text
 );
 
 

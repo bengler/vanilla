@@ -8,3 +8,4 @@ coverage/
 config/realms/*
 /_trash
 /.brow
+config/site.rb

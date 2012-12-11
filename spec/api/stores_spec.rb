@@ -60,7 +60,7 @@ describe 'Stores' do
           minimum_user_name_length
           maximum_user_name_length
           default_sender_email_address
-          service_settings
+          hermes_session
         ).each do |attr|
           data['stores'][0]['store'][attr].to_s.should == store.send(attr).to_s
         end
@@ -97,7 +97,7 @@ describe 'Stores' do
           minimum_user_name_length
           maximum_user_name_length
           default_sender_email_address
-          service_settings
+          hermes_session
         ).each do |attr|
           data['store'][attr].to_s.should == store.send(attr).to_s
         end

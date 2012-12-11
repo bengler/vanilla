@@ -103,21 +103,19 @@ module Vanilla
       end
     end
 
-    get '/:store/delivery_status/:id' do |store, id|
+    get '/:store/delivery_status/:uid' do |store, uid|
       @store = Store.where(:name => store).first
       halt 404 unless @store
-      halt 404 unless id =~ /\A\d+\Z/
-
       begin
-        message = Pebblebed::Connector.new.hermes.get("/#{@store.name}/message/#{id}")
+        message = Pebblebed::Connector.new(@store.hermes_session).hermes.get("/#{@store.name}/messages/#{uid}")
       rescue Pebblebed::HttpError => e
         halt 500 unless e.status == 404
         halt e.status
       else
-        if message.include?('status')
-          pg :delivery_status, {'status' => message['status']}
+        if message.tags and message.tags.any?
+          pg :delivery_status, :locals => {:status => message.tags}
         else
-          pg :delivery_status, {'status' => 'unknown'}
+          pg :delivery_status, :locals => {:status => 'unknown'}
         end
       end
     end
