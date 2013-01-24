@@ -21,7 +21,7 @@ Running
 -------
 
 * Use `config/database-example.yml` as a starting point to create `config/database.yml`.
-* Create database: `bundle exec rake db:create db:migrate`.
+* Create database: `bundle exec rake db:bootstrap`.
 * To run with Pow, symlink folder into `~/.pow`.
 * To run with Unicorn, start with `bundle exec unicorn config.ru`.
 

@@ -10,12 +10,7 @@ describe User do
       :template_url => 'http://example.com/template',
       :default_url => 'http://example.com/',
       :default_sender_email_address => 'Example <notifications@example.com>',
-      :service_settings => {
-        :mailgun => {
-          :domain => 'example.com',
-          :api_key => 'key-s3cr3t'
-        }
-      },
+      :hermes_session => 'god',
       :scopes => {
         'basic' => 'Just basic stuff',
         'extended' => 'Bags of stuff'
@@ -101,12 +96,7 @@ describe User do
       :template_url => 'http://example.com/template',
       :default_url => 'http://example.com/',
       :default_sender_email_address => 'Example <notifications@example.com>',
-      :service_settings => {
-        :mailgun => {
-          :domain => 'example.com',
-          :api_key => 'key-s3cr3t'
-        }
-      },
+      :hermes_session => 'god',
       :scopes => {
         'basic' => 'Just basic stuff',
         'extended' => 'Bags of stuff'

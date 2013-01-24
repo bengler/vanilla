@@ -17,12 +17,7 @@ describe 'Verification' do
       :template_url => 'http://example.com/template',
       :default_url => 'http://example.com/',
       :default_sender_email_address => 'Example <notifications@example.com>',
-      :service_settings => {
-        :mailgun => {
-          :domain => 'example.com',
-          :api_key => 'key-s3cr3t'
-        }
-      },
+      :hermes_session => 'god',
       :scopes => {
         'basic' => 'Just basic stuff',
         'extended' => 'Bags of stuff'
@@ -162,17 +157,18 @@ describe 'Verification' do
     end
 
     it 'renders 404 if non-existent ID' do
-      stub = stub_request(:get, %r{/api/hermes/v1/mystore/message/666}).
+      stub = stub_request(:get, "http://localhost/api/hermes/v1/mystore/messages/post.hermes_message:example$1234?session=god").
         to_return(:status => 404)
-      get "/mystore/delivery_status/666"
+      get "/mystore/delivery_status/post.hermes_message:example$1234"
       last_response.status.should == 404
     end
 
     it 'returns status' do
-      stub = stub_request(:get, %r{/api/hermes/v1/mystore/message/666}).
-        to_return(:body => JSON.dump({:status => 'in_progress'}))
-      get "/mystore/delivery_status/666"
+      stub = stub_request(:get, "http://localhost/api/hermes/v1/mystore/messages/post.hermes_message:example$1234?session=god").
+        to_return(:body =>  '{"post": {"uid": "post.hermes_message:mystore$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["inprogress", "delivered"] }')
+      get "/mystore/delivery_status/post.hermes_message:example$1234"
       stub.should have_been_requested
+      JSON.parse(last_response.body)['status'].should eq ["inprogress", "delivered"]
     end
   end
 

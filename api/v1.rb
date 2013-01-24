@@ -243,7 +243,7 @@ module Vanilla
           :endpoint => :mobile)
         nonce.delivery_status_key = user.store.send_sms!(
           :recipient_number => user.mobile_number,
-          :body => user.store.render_template(:verification_code_sms,
+          :text => user.store.render_template(:verification_code_sms,
             :format => :plaintext,
             :variables => {
               :context => options[:context],
