@@ -58,7 +58,8 @@ module Vanilla
     post '/:store/login' do |store|
       @store = Store.where(:name => store).first
       halt 404 unless @store
-      redirect_back if transitional_user
+
+      self.transitional_user = nil
 
       begin
         @user = @store.authenticate(params[:identification], params[:password])
