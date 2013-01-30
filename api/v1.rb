@@ -286,31 +286,6 @@ module Vanilla
       end
     end
 
-    get '/culture-manifest.json' do
-      manifest = {
-        :format => 1,
-        :title => 'Vanilla, a user database',
-        :description => 'A simple user database with OAuth authentication.',
-        :url => request.url,
-        :home_url => 'https://github.com/bengler/vanilla',
-        :endpoints => [
-          :url => '/stores',
-          :collection => {
-            :type => 'Store',
-            :rooted => true,
-            :root_key => :store,
-            :key_attribute => :id
-          },
-        ],
-        :types => {
-          :store => {
-            :label_attribute => :title
-          }
-        }
-      }
-      JSON.dump(manifest)
-    end
-
     error Sinatra::NotFound do |e|
       halt 404, 'Not found'
     end
