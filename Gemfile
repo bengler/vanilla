@@ -17,9 +17,9 @@ gem 'norwegian_phone', '~> 0.0.10'
 gem 'rest-client', '~> 1.6'
 gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'airbrake', '~> 3.1.4', :require => false
+gem 'bengler_test_helper', :git => "git@github.com:bengler/bengler_test_helper.git"
 
 group :test do
-  gem 'bengler_test_helper', :git => "git@github.com:bengler/bengler_test_helper.git"
   gem 'rspec', '~> 2.8'
   gem 'rack-test'
   gem 'simplecov', :require => false
