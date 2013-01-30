@@ -21,7 +21,9 @@ namespace :db do
   end
 
   task :migrate => :environment do
-    Rake::Task["db:structure:dump"].invoke
+    if %w(test development).include?(ENV['RACK_ENV'])
+      Rake::Task["db:structure:dump"].invoke
+    end
   end
 
   desc "nuke db, recreate, run migrations"
