@@ -300,12 +300,6 @@ module Vanilla
       halt 400, e.message
     end
 
-    if defined?(WebMock)
-      error WebMock::NetConnectNotAllowedError do |e|
-        raise e
-      end
-    end
-
     error StandardError, Exception do |e|
       LOGGER.error "Uncaught exception while processing #{request.url}: #{e.class}: #{e}\n" +
         e.backtrace.map { |s| "\t#{s}\n" }.join
