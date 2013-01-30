@@ -5,6 +5,8 @@ module Vanilla
   class V1 < Sinatra::Base
 
     get '/stores' do
+      god_required!  # TODO: Check for root god?
+
       @stores = Store.all
       pg(:stores, :locals => {:stores => @stores})
     end
