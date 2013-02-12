@@ -300,17 +300,6 @@ module Vanilla
       halt 400, e.message
     end
 
-    error StandardError, Exception do |e|
-      LOGGER.error "Uncaught exception while processing #{request.url}: #{e.class}: #{e}\n" +
-        e.backtrace.map { |s| "\t#{s}\n" }.join
-
-      if ENV['RACK_ENV'] == 'production'
-        halt 500, "Internal error"
-      else
-        halt 500, e.message
-      end
-    end
-
   end
 
 end
