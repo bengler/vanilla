@@ -39,6 +39,7 @@ module Vanilla
     end
 
     before do
+      LOGGER.info "Processing #{request.url}"
       LOGGER.info "Params: #{params.inspect}"
     end
 
