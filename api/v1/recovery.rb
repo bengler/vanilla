@@ -82,7 +82,7 @@ module Vanilla
     get '/:store/recover/password' do |store|
       @store = Store.where(:name => store).first
       halt 404 unless @store
-      halt 403 unless current_user
+      halt 403, "No user" unless current_user or transitional_user
 
       custom_template!(:recovery_password_change, :variables => {
         :submit_url => url_with_params("/#{@store.name}/recover/password", :return_url => return_url),
@@ -97,8 +97,8 @@ module Vanilla
       @store = Store.where(:name => store).first
       halt 404 unless @store
 
-      @user = current_user
-      halt 403 unless @user
+      @user = current_user || transitional_user
+      halt 403, "No user" unless @user
 
       begin
         @user.attributes = params.with_indifferent_access.slice(:password, :password_confirmation)
