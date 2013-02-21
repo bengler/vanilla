@@ -170,9 +170,9 @@ describe 'Authentication' do
       it 'fails gracefully if login template fails to render' do
         stub = stub_request_for_template(:login).
           to_return(:status => 500)
-        get '/mystore/login'
-        last_response.status.should == 500
-        stub.should have_been_requested
+        -> {
+          get '/mystore/login'
+        }.should raise_error(Store::TemplateRenderingError)
       end
     end
 
@@ -445,9 +445,9 @@ describe 'Authentication' do
       it 'fails gracefully if login template fails to render' do
         stub = stub_request_for_template(:login).
           to_return(:status => 500)
-        post '/mystore/login'
-        last_response.status.should == 500
-        stub.should have_been_requested
+        -> {
+          post '/mystore/login'
+        }.should raise_error(Store::TemplateRenderingError)
       end
     end
 
