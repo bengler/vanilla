@@ -29,7 +29,7 @@ module Vanilla
       halt 404 unless @store
       redirect_back if transitional_user
       custom_template!(:login, :variables => {
-        :submit_url => url("/#{@store.name}/login"),
+        :submit_url => url("/#{@store.name}/login?return_url=#{CGI.escape(return_url)}"),
         :return_url => return_url,
         :target_url => params[:target_url]
       })
