@@ -188,6 +188,7 @@ module Vanilla
       
       logger.info "Rendering template URL: #{uri}"
       if (variables = options[:variables])
+        logger.info "With variables: #{variables.inspect}"
         body = JSON.dump(variables.stringify_keys)
       end
       response = Excon.post(uri.to_s,
