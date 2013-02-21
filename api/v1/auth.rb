@@ -48,7 +48,7 @@ module Vanilla
       else
         self.transitional_user = nil
         custom_template!(:login, :variables => {
-          :submit_url => url("/#{@store.name}/login"),
+          :submit_url => url("/#{@store.name}/login?return_url=#{CGI.escape(return_url)}"),
           :return_url => return_url,
           :target_url => params[:target_url]
         })
