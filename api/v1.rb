@@ -38,6 +38,10 @@ module Vanilla
       end
     end
 
+    before do
+      LOGGER.info "Params: #{params.inspect}"
+    end
+
     helpers do
       def logger
         LOGGER
