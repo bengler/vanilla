@@ -19,13 +19,12 @@ module Vanilla
 
     before do
       @configuration = Configuration.instance
-    end
 
-    before do
+      LOGGER.info "Processing #{request.url}"
+      LOGGER.info "Params: #{params.inspect}"
+
       cache_control :private, :no_store, :must_revalidate
-    end
 
-    before do
       if current_user
         LOGGER.info "Session user ID=#{current_user.id}"
       else
@@ -36,11 +35,6 @@ module Vanilla
       else
         LOGGER.info "No transitional user"
       end
-    end
-
-    before do
-      LOGGER.info "Processing #{request.url}"
-      LOGGER.info "Params: #{params.inspect}"
     end
 
     helpers do
