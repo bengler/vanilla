@@ -59,6 +59,8 @@ module Vanilla
         @user.attributes = attrs.slice(
           :password_hash, :password, :mobile_verified, :email_verified,
           :activated, :activated_at)
+        @user.email_verified ||= false
+        @user.mobile_verified ||= false
       else
         # TODO: Move this into a security system
         %w(password_hash mobile_verified email_verified 
@@ -98,6 +100,8 @@ module Vanilla
         @user.attributes = attrs.slice(
           :password_hash, :password, :mobile_verified, :email_verified,
           :activated, :activated_at)
+        @user.email_verified ||= false
+        @user.mobile_verified ||= false
       else
         # TODO: Move this into a security system
         %w(password_hash mobile_verified email_verified
