@@ -1,6 +1,8 @@
 Vanilla
 =======
 
+[![Build Status](https://semaphoreapp.com/api/v1/projects/f8a20614eda0f345d510e925dfc4fe8cc8e83a88/28276/badge.png)](https://semaphoreapp.com/projects/1578/branches/28276)
+
 Vanilla is a simple, reusable user database component designed to work as an OAuth provider for any application:
 
 * Designed to work with [Checkpoint](https://github.com/bengler/checkpoint) and [Pebblestack](http://pebblestack.org/), but this is optional.
