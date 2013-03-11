@@ -16,7 +16,19 @@ gem 'excon', '~> 0.12.0'
 gem 'norwegian_phone', '~> 0.0.10'
 gem 'rest-client', '~> 1.6'
 gem 'bcrypt-ruby', :require => 'bcrypt'
-gem 'bengler_test_helper', :git => "git@github.com:bengler/bengler_test_helper.git"
+
+group :development do
+  gem 'thin'
+end
+
+group :development, :test do
+  gem 'bengler_test_helper', :git => "git@github.com:bengler/bengler_test_helper.git", :require => false
+end
+
+group :production do
+  gem 'airbrake', '~> 3.1.4', :require => false
+  gem 'unicorn', '~> 4.3.0'
+end
 
 group :test do
   gem 'rspec', '~> 2.8'
@@ -24,13 +36,4 @@ group :test do
   gem 'simplecov', :require => false
   gem 'webmock'
   gem 'rack-test'
-end
-
-group :development do
-  gem 'thin'
-end
-
-group :production do
-  gem 'airbrake', '~> 3.1.4', :require => false
-  gem 'unicorn', '~> 4.3.0'
 end
