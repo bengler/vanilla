@@ -85,13 +85,14 @@ module Vanilla
         end
         @user.save!
       rescue ActiveRecord::RecordInvalid => e
-        custom_template!(:verification_code_validation, :status => 400, :variables => attrs.merge(
+        custom_template!(:verification_code_validation, :status => 400, :variables => {
           :context => @context,
           :endpoint => @endpoint,
           :submit_url => url_with_params("/#{@store.name}/verify", :nonce_id => @nonce.id),
           :delivery_status_url => @delivery_status_url,
           :error => exception_to_error_symbol(e),
-          :return_url => return_url))
+          :return_url => return_url
+        })
       else
         case @nonce.context
           when :signup, :recovery
