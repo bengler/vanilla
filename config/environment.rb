@@ -20,7 +20,6 @@ ENV['RACK_ENV'] ||= "development"
 environment = ENV['RACK_ENV']
 
 Pebblebed.config do
-  host 'localhost'
   service :checkpoint
   service :hermes
 end
