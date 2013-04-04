@@ -428,7 +428,7 @@ describe 'Signup' do
             "to" => "burt@engelskmann.com"
           }))
 
-        hermes_stub = stub_request(:post, "http://localhost/api/hermes/v1/mystore/messages/email").
+        hermes_stub = stub_request(:post, "http://vanilla.dev/api/hermes/v1/mystore/messages/email").
           with(:body => "{\"sender_email\":\"Example <notifications@example.com>\",\"recipient_email\":\"burt@engelskmann.com\",\"subject\":\"A code, my kingdom for a code\",\"html\":\"<p>Code is 1234</p>\",\"text\":\"Code is 1234\",\"path\":\"vanilla\",\"session\":\"god\"}",
                :headers => {'Accept'=>'application/json', 'Content-Type'=>'application/json'}).
           to_return(:status => 200, :body => '{"post": {"uid": "post.hermes_message:test$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["in_progress"] }', :headers => {})
