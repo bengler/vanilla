@@ -93,25 +93,6 @@ module Vanilla
       write_attribute(:user_name_pattern, value.to_s)
     end
 
-    def send_sms!(options)
-      message = Pebblebed::Connector.new(self.hermes_session).hermes.post(
-        "/#{self.name}/messages/sms", options.slice(:recipient_number, :text).merge(:path => "vanilla"))
-      message["post"]["uid"]
-    end
-
-    def send_email!(options)
-      logger.debug { "Sending email: #{options.inspect}" }
-      message = {}
-      message[:sender_email] = self.default_sender_email_address
-      message[:recipient_email] = options[:recipient_address]
-      message[:subject] = options[:subject]
-      message[:html] = options[:html] if options[:html]
-      message[:text] = options[:text] if options[:text]
-      message = Pebblebed::Connector.new(self.hermes_session).hermes.post(
-        "/#{self.name}/messages/email", message.merge(:path => "vanilla"))
-      message["post"]["uid"]
-    end
-
     def scopes
       super || {}
     end

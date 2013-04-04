@@ -268,6 +268,7 @@ module Vanilla
           :url => options[:return_url] || self.return_url,
           :endpoint => :email,
           :context => options[:context])
+
         email_data = user.store.render_template(:verification_code_email,
           :format => :json,
           :variables => {
@@ -275,12 +276,18 @@ module Vanilla
             :code => nonce.value,
             :url => short_verification_url(nonce)
           })
-        user.store.send_email!(
-          :recipient_address => user.email_address,
-          :html => email_data['html'],
-          :text => email_data['text'],
-          :subject => email_data['subject'],
-          :from => email_data['from'])
+
+        message = {}
+        message[:sender_email] = email_data['from'] || user.store.default_sender_email_address
+        message[:recipient_email] = user.email_address,
+        message[:subject] = email_data[:subject]
+        message[:html] = email_data[:html] if email_data[:html]
+        message[:text] = email_data[:text] if email_data[:text]
+        message[:path] = 'vanilla'
+
+        nonce.delivery_status_key = hermes(user.store).post(
+          "/#{user.store.name}/messages/email", message)["post"]["uid"]
+        nonce.save!
         nonce
       end
     end
