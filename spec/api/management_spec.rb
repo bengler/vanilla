@@ -408,10 +408,13 @@ describe 'Management' do
               :subject => 'A code, my kingdom for a code',
               :text => "Code, blah blah"))
 
-        stub_request(:post, "http://vanilla.dev/api/hermes/v1/mystore/messages/email").
-          with(:body => "{\"sender_email\":\"Example <notifications@example.com>\",\"recipient_email\":\"bob@example.com\",\"subject\":\"A code, my kingdom for a code\",\"text\":\"Code, blah blah\",\"path\":\"vanilla\",\"session\":\"god\"}",
-               :headers => {'Accept'=>'application/json', 'Content-Type'=>'application/json'}).
-          to_return(:status => 200, :body =>  '{"post": {"uid": "post.hermes_message:test$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["in_progress"] }', :headers => {})
+        stub_request(:post, "http://example.org/api/hermes/v1/mystore/messages/email").
+          with(
+            :body => "{\"sender_email\":\"Example <notifications@example.com>\",\"recipient_email\":\"bob@example.com\",\"subject\":\"A code, my kingdom for a code\",\"text\":\"Code, blah blah\",\"path\":\"vanilla\",\"session\":\"god\"}",
+            :headers => {'Accept'=>'application/json', 'Content-Type'=>'application/json'}).
+          to_return(
+            :status => 200,
+            :body => '{"post": {"uid": "post.hermes_message:test$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["in_progress"] }', :headers => {})
 
         stub = stub_request_for_template(:verification_code_sent,
           :body => proc { |h|
