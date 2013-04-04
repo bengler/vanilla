@@ -108,7 +108,7 @@ module Vanilla
       @store = Store.where(:name => store).first
       halt 404 unless @store
       begin
-        message = Pebblebed::Connector.new(@store.hermes_session).hermes.get("/#{@store.name}/messages/#{uid}")
+        message = hermes(@store).get("/#{@store.name}/messages/#{uid}")
       rescue Pebblebed::HttpError => e
         halt 500 unless e.status == 404
         halt e.status

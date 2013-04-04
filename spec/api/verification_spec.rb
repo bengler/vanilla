@@ -157,14 +157,14 @@ describe 'Verification' do
     end
 
     it 'renders 404 if non-existent ID' do
-      stub = stub_request(:get, "http://vanilla.dev/api/hermes/v1/mystore/messages/post.hermes_message:example$1234?session=god").
+      stub = stub_request(:get, "http://example.org/api/hermes/v1/mystore/messages/post.hermes_message:example$1234?session=god").
         to_return(:status => 404)
       get "/mystore/delivery_status/post.hermes_message:example$1234"
       last_response.status.should == 404
     end
 
     it 'returns status' do
-      stub = stub_request(:get, "http://vanilla.dev/api/hermes/v1/mystore/messages/post.hermes_message:example$1234?session=god").
+      stub = stub_request(:get, "http://example.org/api/hermes/v1/mystore/messages/post.hermes_message:example$1234?session=god").
         to_return(:body =>  '{"post": {"uid": "post.hermes_message:mystore$1234", "document": {"body": "fofo", "callback_url": "http://example.com/"}}, "tags": ["inprogress", "delivered"] }')
       get "/mystore/delivery_status/post.hermes_message:example$1234"
       stub.should have_been_requested

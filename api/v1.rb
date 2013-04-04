@@ -231,6 +231,10 @@ module Vanilla
         uri.to_s
       end
 
+      def hermes(store)
+        Pebblebed::Connector.new(store.hermes_session, host: request.host).hermes
+      end
+
       def send_nonce_to_mobile!(user, options = {})
         nonce = Nonce.new(
           :store => user.store,
@@ -240,7 +244,8 @@ module Vanilla
           :url => options[:return_url] || self.return_url,
           :context => options[:context],
           :endpoint => :mobile)
-        nonce.delivery_status_key = user.store.send_sms!(
+        nonce.delivery_status_key = hermes(user.store).post("/#{user.store.name}/messages/sms",
+          :path => 'vanilla',
           :recipient_number => user.mobile_number,
           :text => user.store.render_template(:verification_code_sms,
             :format => :plaintext,
@@ -248,7 +253,8 @@ module Vanilla
               :context => options[:context],
               :code => nonce.value,
               :url => short_verification_url(nonce)
-            }))
+            })
+          )["post"]["uid"]
         nonce.save!
         nonce
       end

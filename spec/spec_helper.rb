@@ -23,6 +23,10 @@ end
 
 LOGGER.level = Logger::FATAL
 
+Pebblebed.config do
+  host 'vanilla.dev'
+end
+
 set :environment, :test
 
 RSpec.configure do |config|
