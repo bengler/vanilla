@@ -22,6 +22,14 @@ environment = ENV['RACK_ENV']
 Pebblebed.config do
   service :checkpoint
   service :hermes
+  host case ENV['RACK_ENV']
+    when 'staging' then
+      'pebbles.staging.o5.no'
+    when 'production' then
+      'pebbles.o5.no'
+    else
+      'vanilla.dev'
+  end
 end
 
 unless defined?(LOGGER)
