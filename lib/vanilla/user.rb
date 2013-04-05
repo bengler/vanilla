@@ -74,7 +74,7 @@ module Vanilla
       if value.present?
         if not User.mobile_valid?(value)
           record.errors.add(attr, 'invalid_mobile_number')
-        elsif record.active?
+        elsif record.active? and record.store
           conflicting_user = User.active.in_store(record.store).
             having_mobile(value).where(:mobile_verified => true).first
           if conflicting_user and conflicting_user != record
