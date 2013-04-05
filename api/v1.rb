@@ -309,7 +309,19 @@ module Vanilla
     error ActiveRecord::RecordInvalid do |e|
       LOGGER.error "Validation failed: #{e}"
       LOGGER.error e.record.inspect
-      halt 400, e.message
+
+      errors = e.record.errors
+      if errors.any? and (key = errors.messages.values.map(&:first).first)
+        headers['Error'] = key
+        case key
+          when /_in_use$/
+            halt 409, key.gsub('_', ' ').capitalize
+          else
+            halt 400, e.message
+        end
+      else
+        halt 400, e.message
+      end
     end
 
   end

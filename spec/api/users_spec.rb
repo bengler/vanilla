@@ -184,6 +184,24 @@ describe 'Users' do
         user.activated.should == true
       end
 
+      it 'returns 409 if mobile number is in use' do
+        post_body '/mystore/users', {}, {
+          name: 'Kari Nordmann',
+          mobile_number: '10001'
+        }
+        last_response.status.should == 409
+        last_response.headers['Error'].should eq 'mobile_number_in_use'
+      end
+
+      it 'returns 409 if email is in use' do
+        post_body '/mystore/users', {}, {
+          name: 'Kari Nordmann',
+          email_address: 'ola@nordmann.com'
+        }
+        last_response.status.should == 409
+        last_response.headers['Error'].should eq 'email_address_in_use'
+      end
+
       it 'rejects invalid user data' do
         post "/mystore/users", {:name => "Kari"}
         last_response.status.should == 400
@@ -256,6 +274,36 @@ describe 'Users' do
         last_response.status.should == 200
         user.reload
         user.name.should == 'Ola X. Nordmann'
+      end
+
+      it 'returns 409 if mobile number is in use' do
+        existing_user = User.create!(
+          store: store,
+          name: 'Borghild Nordmann',
+          password: 'Secret123',
+          mobile_number: '10002',
+          mobile_verified: true,
+          activated: true)
+        put_body "/mystore/users/#{user.id}", {}, {
+          mobile_number: '10002'
+        }
+        last_response.status.should == 409
+        last_response.headers['Error'].should eq 'mobile_number_in_use'
+      end
+
+      it 'returns 409 if email is in use' do
+        existing_user = User.create!(
+          store: store,
+          name: 'Borghild Nordmann',
+          password: 'Secret123',
+          email_address: 'borghild@nordmann.com',
+          email_verified: true,
+          activated: true)
+        put_body "/mystore/users/#{user.id}", {}, {
+          email_address: 'borghild@nordmann.com'
+        }
+        last_response.status.should == 409
+        last_response.headers['Error'].should eq 'email_address_in_use'
       end
 
       it 'rejects invalid user' do
