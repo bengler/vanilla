@@ -236,7 +236,7 @@ module Vanilla
 
     private
 
-      EMAIL_FORMAT = /\A\s*([^\s]+@[^\s]+)\s*\z/m.freeze
+      EMAIL_FORMAT = /\A\s*([^\s]+)@([^.][^\s]+)\s*\z/m.freeze
       MOBILE_FORMAT = /\A\s*(\+?[0-9\s-]+)\s*\z/m.freeze
 
       def legacy_hash(s)
