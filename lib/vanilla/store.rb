@@ -166,33 +166,47 @@ module Vanilla
       if (user = options[:user])
         uri.query << "&uid=#{user.id}"
       end
-      
+
       logger.info "Rendering template URL: #{uri}"
       if (variables = options[:variables])
         logger.info "With variables: #{variables.inspect}"
         body = JSON.dump(variables.stringify_keys)
       end
-      response = Excon.post(uri.to_s,
-        :body => body,
-        :headers => {
-          'Content-Type' => 'application/json',
-          'Accept' =>
-            case format
-              when :json then 'application/json'
-              when :plaintext then 'text/plain'
-              when :html then 'text/html'
-              else '*/*'
+
+      retries_left, response = 10, nil
+      loop do
+        begin
+          response = Excon.post(uri.to_s,
+            :body => body,
+            :headers => {
+              'Content-Type' => 'application/json',
+              'Accept' =>
+                case format
+                  when :json then 'application/json'
+                  when :plaintext then 'text/plain'
+                  when :html then 'text/html'
+                  else '*/*'
+                end
+            })
+          if response.status == 200
+            break
+          else
+            if retries_left > 0 and response.status == 503
+              sleep(0.5)
+              retries_left -= 1
+            else
+              raise TemplateRenderingError, "Server returned #{response.status} for template #{name}"
             end
-        })
-      unless response.status == 200
-        raise TemplateRenderingError, "Server returned #{response.status} for template #{name}"
+          end
+        rescue Excon::Errors::SocketError => e
+          raise TemplateRenderingError, "Server could not render template: #{e}"
+        end
       end
+
       body = response.body
       body.force_encoding($1) if response.headers['Content-Type'] =~ /charset=([^\s]+)/
       body = JSON.parse(body) if options[:format] == :json
       body
-    rescue Excon::Errors::SocketError => e
-      raise TemplateRenderingError, "Server could not render template: #{e}"
     end
 
     def sign_with_secret(data)
