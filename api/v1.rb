@@ -211,9 +211,11 @@ module Vanilla
 
       def god_required!(store = nil)
         unless god?
+          logger.error "Must be god"
           halt 403, 'User must be god to perform this action'
         end
         if store and current_identity[:realm] != store.name
+          logger.error "Wrong store"
           halt 403, "User must be god in store '#{store.name}' to perform this action"
         end
       end
