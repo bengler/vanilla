@@ -123,14 +123,10 @@ module Vanilla
       end
 
       def name_match?(a, b)
-        if a and b
-          a, b = normalize_name(a), normalize_name(b)
-          a.downcase!
-          b.downcase!
-          a == b
-        else
-          false
-        end
+        a, b = normalize_name(a), normalize_name(b)
+        a.try(:downcase!)
+        b.try(:downcase!)
+        a == b
       end
 
       def normalize_name(name)
