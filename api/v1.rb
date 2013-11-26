@@ -159,6 +159,11 @@ module Vanilla
         halt(options[:status] || 200)
       end
 
+      def url_with_return_url(url, return_url = nil)
+        return_url ||= self.return_url
+        url_with_params(url, return_url: return_url)
+      end
+
       def return_url=(url)
         @return_url = url
       end
@@ -190,7 +195,7 @@ module Vanilla
 
       # Encode a params hash to a base64 string.
       def encode_params_base64(params)
-        query = params.map { |(k, v)| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }.join('&')
+        query = params.map { |(k, v)| "#{uri_escape(k.to_s)}=#{uri_escape(v.to_s)}" }.join('&')
         s = Base64.encode64(query)
         s.gsub!(/(\s|==$)/, '')
         s
@@ -222,15 +227,25 @@ module Vanilla
 
       def url_with_params(url, params)
         uri = URI.parse(self.url(url))
-        
+
         query = CGI.parse(uri.query || '')
         query = HashWithIndifferentAccess[*query.entries.map { |k, v| [k, v[0]] }.flatten]
         query.merge!(params)
 
         uri.query = query.entries.map { |k, v|
-          "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}&"
+          "#{uri_escape(k.to_s)}=#{uri_escape(v.to_s)}&"
         }.join('&')
         uri.to_s
+      end
+
+      def uri_escape(value)
+        if value
+          unless value.valid_encoding?
+            # Fix bad Unicode strings
+            value = value.encode('utf-8', 'binary', undef: :replace)
+          end
+          CGI.escape(value)
+        end
       end
 
       def hermes(store)

@@ -27,7 +27,7 @@ module Vanilla
       redirect return_url if current_user
 
       custom_template!(:recovery_request, :variables => {
-        :submit_url => url("/#{@store.name}/recover?return_url=#{CGI.escape(return_url)}"),
+        :submit_url => url_with_return_url("/#{@store.name}/recover", return_url),
         :mobile_number => params[:mobile_number],
         :return_url => return_url
       })
@@ -49,7 +49,7 @@ module Vanilla
         @user, @endpoint = @store.identify(params[:identification], [:email, :mobile])
       rescue Store::IdentificationError => e
         custom_template!(:recovery_request, :status => 403, :variables => {
-          :submit_url => url("/#{@store.name}/request?return_url=#{CGI.escape(return_url)}"),
+          :submit_url => url_with_return_url("/#{@store.name}/request"),
           :identification => params[:identification],
           :error => exception_to_error_symbol(e),
           :return_url => return_url

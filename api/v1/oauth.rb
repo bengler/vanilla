@@ -62,9 +62,9 @@ module Vanilla
       # Returns URL with a fragment added. The fragment may be a hash.
       def url_with_fragment(url, fragment)
         if Hash === fragment
-          fragment = fragment.entries.map { |key, value| [CGI.escape(key.to_s), CGI.escape(value.to_s)].join('=') }.join('&')
+          fragment = fragment.entries.map { |key, value| [uri_escape(key.to_s), uri_escape(value.to_s)].join('=') }.join('&')
         else
-          fragment = CGI.escape(fragment)
+          fragment = uri_escape(fragment)
         end
         uri = URI.parse(url)
         uri.fragment = fragment
@@ -159,9 +159,9 @@ module Vanilla
       end
       url_params = "implicit=#{@flow == :implicit_grant}" \
         "&client_id=#{@client.api_key}" \
-        "&scope=#{CGI.escape @requested_scopes.join(',')}"
-      url_params << "&state=#{CGI.escape(params[:state])}" if params[:state]
-      url_params << "&redirect_uri=#{CGI.escape(params[:redirect_uri])}" if params[:redirect_uri]
+        "&scope=#{uri_escape @requested_scopes.join(',')}"
+      url_params << "&state=#{uri_escape(params[:state])}" if params[:state]
+      url_params << "&redirect_uri=#{uri_escape(params[:redirect_uri])}" if params[:redirect_uri]
       custom_template!(:authorize, :variables => {
         :client_title => @client.title,
         :allow_url => url("/oauth/allow?#{url_params}"),
