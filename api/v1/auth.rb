@@ -29,7 +29,7 @@ module Vanilla
       halt 404 unless @store
       redirect_back if transitional_user
       custom_template!(:login, :variables => {
-        :submit_url => url("/#{@store.name}/login?return_url=#{CGI.escape(return_url)}"),
+        :submit_url => url_with_return_url("/#{@store.name}/login"),
         :return_url => return_url,
         :target_url => params[:target_url]
       })
@@ -48,7 +48,7 @@ module Vanilla
       else
         self.transitional_user = nil
         custom_template!(:login, :variables => {
-          :submit_url => url("/#{@store.name}/login?return_url=#{CGI.escape(return_url)}"),
+          :submit_url => url_with_return_url("/#{@store.name}/login"),
           :return_url => return_url,
           :target_url => params[:target_url]
         })
@@ -65,7 +65,7 @@ module Vanilla
         @user = @store.authenticate(params[:identification], params[:password])
       rescue Store::AuthenticationError => e
         custom_template!(:login, :status => 403, :variables => {
-          :submit_url => url("/#{@store.name}/login?return_url=#{CGI.escape(return_url)}"),
+          :submit_url => url_with_return_url("/#{@store.name}/login"),
           :identification => params[:identification],
           :error => exception_to_error_symbol(e),
           :target_url => params[:target_url],
