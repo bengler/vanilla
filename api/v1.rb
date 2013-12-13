@@ -240,11 +240,7 @@ module Vanilla
 
       def uri_escape(value)
         if value
-          unless value.valid_encoding?
-            # Fix bad Unicode strings
-            value = value.encode('utf-8', 'binary', undef: :replace)
-          end
-          CGI.escape(value)
+          CGI.escape(Utils.fix_encoding(value))
         end
       end
 
