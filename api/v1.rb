@@ -240,7 +240,15 @@ module Vanilla
 
       def uri_escape(value)
         if value
-          CGI.escape(Utils.fix_encoding(value))
+          begin
+            return CGI.escape(Utils.fix_encoding(value))
+          rescue ArgumentError => e
+            if e.to_s =~ /invalid byte sequence/
+              return nil
+            else
+              raise
+            end
+          end
         end
       end
 
