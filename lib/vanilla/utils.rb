@@ -9,7 +9,7 @@ module Vanilla
             [fix_encoding(key.to_s), fix_encoding(value)]
           }]
         when String
-          if value.respond_to?(:valid_encoding) and not value.valid_encoding?
+          if value.respond_to?(:valid_encoding?) and not value.valid_encoding?
             value.encode('utf-8', 'binary', undef: :replace)
           else
             value
