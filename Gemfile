@@ -6,7 +6,8 @@ gem 'sinatra', '~> 1.3.4'
 gem 'sinatra-activerecord', '~> 1.2.2', :require => false
 gem 'rack', '~> 1.4'
 gem 'rack-contrib', '~> 1.1.0'
-gem 'activerecord', '~> 3.2.12', :require => 'active_record'
+gem 'activerecord', '~> 3.2.13', :require => 'active_record'
+gem 'activesupport', '~> 3.2.13'
 gem 'pg', '~> 0.13.2'
 gem 'yajl-ruby', '~> 1.1.0', :require => "yajl"
 gem 'pebblebed'
