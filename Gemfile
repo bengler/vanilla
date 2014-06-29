@@ -16,6 +16,7 @@ gem 'excon', '~> 0.12.0'
 gem 'norwegian_phone', '~> 0.0.10'
 gem 'rest-client', '~> 1.6'
 gem 'bcrypt-ruby', :require => 'bcrypt'
+gem 'unicorn', '~> 4.8.3'
 
 group :development do
   gem 'thin'
@@ -27,7 +28,6 @@ end
 
 group :production do
   gem 'airbrake', '~> 3.1.4', :require => false
-  gem 'unicorn', '~> 4.3.0'
 end
 
 group :test do
