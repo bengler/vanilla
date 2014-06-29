@@ -6,7 +6,8 @@ gem 'sinatra', '~> 1.3.4'
 gem 'sinatra-activerecord', '~> 1.2.2', :require => false
 gem 'rack', '~> 1.4'
 gem 'rack-contrib', '~> 1.1.0'
-gem 'activerecord', '~> 3.2.12', :require => 'active_record'
+gem 'activerecord', '~> 3.2.13', :require => 'active_record'
+gem 'activesupport', '~> 3.2.13'
 gem 'pg', '~> 0.13.2'
 gem 'yajl-ruby', '~> 1.1.0', :require => "yajl"
 gem 'pebblebed'
@@ -16,6 +17,7 @@ gem 'excon', '~> 0.12.0'
 gem 'norwegian_phone', '~> 0.0.10'
 gem 'rest-client', '~> 1.6'
 gem 'bcrypt-ruby', :require => 'bcrypt'
+gem 'unicorn', '~> 4.8.3'
 
 group :development do
   gem 'thin'
@@ -27,7 +29,6 @@ end
 
 group :production do
   gem 'airbrake', '~> 3.1.4', :require => false
-  gem 'unicorn', '~> 4.3.0'
 end
 
 group :test do
